@@ -121,6 +121,7 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
     average_assignment_mark = serializers.SerializerMethodField()
     
     attendance_percentage_mark = serializers.SerializerMethodField()
+    total_internal_mark = serializers.SerializerMethodField()
 
     class Meta:
         model = TheoryInternalMark
@@ -142,7 +143,8 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
             "average_assignment_mark",
 
             "attendance_percentage",
-            "attendance_percentage_mark"
+            "attendance_percentage_mark",
+            "total_internal_mark"
         ]
 
     def get_average_internal_mark(self, obj):
@@ -178,6 +180,15 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
                 return 6
         else:
             return 0
+        
+    def get_total_internal_mark(self, obj):
+        average_internal_mark = self.get_average_internal_mark(obj)
+        average_assignment_mark = self.get_average_assignment_mark(obj)
+        attendance_percentage_mark = self.get_attendance_percentage_mark(obj)
+
+        total_internal_mark = average_internal_mark + average_assignment_mark + attendance_percentage_mark
+
+        return total_internal_mark
 
 
 
