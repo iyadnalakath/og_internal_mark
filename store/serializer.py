@@ -198,6 +198,8 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
     subject_name = serializers.CharField(source="subject.name", read_only=True)
     average_test_mark = serializers.SerializerMethodField() 
 
+    total_lab_mark = serializers.SerializerMethodField()
+
     class Meta:
         model = LabInternalMark
         fields = [
@@ -217,7 +219,9 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
             "fair_record_mark",
             "lab_work_mark",
             "open_ended_mark",
-            "attendance_mark"
+            "attendance_mark",
+
+            "total_lab_mark"
 
             ]
         
@@ -228,6 +232,21 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
         total_marks = test1 + test2
         return total_marks / 2
     
+    def get_total_lab_mark(self, obj):
+        average_test_mark = self.get_average_test_mark(obj)
+        rough_record_mark = obj.rough_record_mark or 0
+        fair_record_mark = obj.fair_record_mark or 0
+        lab_work_mark = obj.lab_work_mark or 0
+        open_ended_mark = obj.open_ended_mark or 0
+        attendance_mark = obj.attendance_mark or 0
+
+
+        total_internal_mark = average_test_mark + rough_record_mark + lab_work_mark + fair_record_mark + open_ended_mark + attendance_mark
+
+        return total_internal_mark
+
+
+
 
 class SemesterCountSerializer(serializers.Serializer):
     semester_name = serializers.CharField()
