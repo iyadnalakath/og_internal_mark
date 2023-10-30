@@ -21,7 +21,7 @@ class SubjectViews(ModelViewSet):
         semester_id = self.request.query_params.get('semester_id')
         if semester_id:
             queryset = self.get_queryset().filter(semester_id=semester_id)
-        else:
+        else: 
             if self.request.user.role == "teacher":
                 queryset = self.request.user.subject.all()
             else:
@@ -31,6 +31,7 @@ class SubjectViews(ModelViewSet):
             queryset, many=True, context={"request": self.request}
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
+    # for testing
 
 class SemesterViews(ModelViewSet):
     permission_classes = [IsAuthenticated]
