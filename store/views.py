@@ -162,6 +162,8 @@ class LabInternalMarkViews(ModelViewSet):
 #         return Response(student_data)
 
 #
+
+
 class StudentSubjectMarks(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -169,6 +171,7 @@ class StudentSubjectMarks(APIView):
         semester_id = self.request.query_params.get('semester_id')
 
         students = Student.objects.filter(semester=semester_id)
+        subjects = Subject.objects.filter(semester=semester_id)
 
         student_data = []
 
@@ -179,13 +182,57 @@ class StudentSubjectMarks(APIView):
             theory_serializer = TheoryInternalMarkSerializer(theory_marks, many=True)
             lab_serializer = LabInternalMarkSerializer(lab_marks, many=True)
 
+            theory_subjects = [mark['subject'] for mark in theory_serializer.data] if theory_marks else []
+            lab_subjects = [mark['subject'] for mark in lab_serializer.data] if lab_marks else []
+
+            # Convert list of dictionaries to list of subject IDs
+            theory_subject_ids = [mark['subject']['id'] for mark in theory_serializer.data] if theory_marks else []
+            lab_subject_ids = [mark['subject']['id'] for mark in lab_serializer.data] if lab_marks else []
+
+            existing_theory_subjects = set(theory_subject_ids)
+            existing_lab_subjects = set(lab_subject_ids)
+
+            missing_theory_subjects = [subject.id for subject in subjects if subject.id not in existing_theory_subjects and subject.role == 'Theory']
+            missing_lab_subjects = [subject.id for subject in subjects if subject.id not in existing_lab_subjects and subject.role == 'Lab']
+
+            # Serialize the missing subjects
+            missing_theory_subjects = SubjectSerializer(Subject.objects.filter(id__in=missing_theory_subjects), many=True).data
+            missing_lab_subjects = SubjectSerializer(Subject.objects.filter(id__in=missing_lab_subjects), many=True).data
+
             student_data.append({
                 'student': RegisterStudentSerializer(student).data,
-                'theory_marks': theory_serializer.data,
-                'lab_marks': lab_serializer.data,
+                'theory_marks': theory_serializer.data + missing_theory_subjects,
+                'lab_marks': lab_serializer.data + missing_lab_subjects,
             })
 
         return Response(student_data)
+
+# class StudentSubjectMarks(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         semester_id = self.request.query_params.get('semester_id')
+
+#         students = Student.objects.filter(semester=semester_id)
+
+#         student_data = []
+
+#         for student in students:
+#             theory_marks = TheoryInternalMark.objects.filter(student=student, semester=semester_id)
+#             lab_marks = LabInternalMark.objects.filter(student=student, semester=semester_id)
+
+#             theory_serializer = TheoryInternalMarkSerializer(theory_marks, many=True)
+#             lab_serializer = LabInternalMarkSerializer(lab_marks, many=True)
+
+#             student_data.append({
+#                 'student': RegisterStudentSerializer(student).data,
+#                 'theory_marks': theory_serializer.data,
+#                 'lab_marks': lab_serializer.data,
+#                 # 'theory_marks': theory_serializer.data if theory_marks else None,
+#                 # 'lab_marks': lab_serializer.data if lab_marks else None,
+#             })
+
+#         return Response(student_data)
     
 
 class SemesterCountAPIView(APIView):

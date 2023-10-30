@@ -29,7 +29,7 @@ class SubjectSerializer(serializers.ModelSerializer):
     def get_total_subject_count(self, obj):
         return Subject.objects.count()
 
-    
+
 
 
 class RegisterTeacherSerializer(serializers.ModelSerializer):
@@ -119,6 +119,8 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
     subject_name = serializers.CharField(source="subject.name", read_only=True)
     average_internal_mark = serializers.SerializerMethodField()
     average_assignment_mark = serializers.SerializerMethodField()
+
+    subject = SubjectSerializer()
     
     attendance_percentage_mark = serializers.SerializerMethodField()
     total_internal_mark = serializers.SerializerMethodField()
@@ -180,6 +182,7 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
                 return 6
         else:
             return 0
+
         
     def get_total_internal_mark(self, obj):
         average_internal_mark = self.get_average_internal_mark(obj)
@@ -197,7 +200,7 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
     student_name = RegisterStudentSerializer(source="student",read_only=True)
     subject_name = serializers.CharField(source="subject.name", read_only=True)
     average_test_mark = serializers.SerializerMethodField() 
-
+    subject = SubjectSerializer()
     total_lab_mark = serializers.SerializerMethodField()
 
     class Meta:
@@ -231,6 +234,7 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
 
         total_marks = test1 + test2
         return total_marks / 2
+    
     
     def get_total_lab_mark(self, obj):
         average_test_mark = self.get_average_test_mark(obj)

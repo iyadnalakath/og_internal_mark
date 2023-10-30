@@ -53,6 +53,9 @@ class Subject(models.Model):
     )
     role = models.CharField(max_length=50,null=True,blank=True)
 
+    def __str__(self):
+        return self.name
+    
 class Account(AbstractBaseUser):
     user_admin = "admin"
     user_teacher = "teacher"
