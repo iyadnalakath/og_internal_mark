@@ -17,12 +17,15 @@ class SubjectViews(ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
 
-
     def list(self, request, *args, **kwargs):
-        if self.request.user.role == "teacher":
-            queryset = self.request.user.subject.all()
+        semester_id = self.request.query_params.get('semester_id')
+        if semester_id:
+            queryset = self.get_queryset().filter(semester_id=semester_id)
         else:
-            queryset = self.get_queryset()
+            if self.request.user.role == "teacher":
+                queryset = self.request.user.subject.all()
+            else:
+                queryset = self.get_queryset()
 
         serializer = SubjectSerializer(
             queryset, many=True, context={"request": self.request}
