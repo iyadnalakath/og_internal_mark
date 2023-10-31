@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from projectaccount.models import Account, Subject,Semester
 from store.models import LabInternalMark, Student, TheoryInternalMark
-from store.serializer import LabInternalMarkSerializer, RegisterStudentSerializer, RegisterTeacherSerializer, SemesterCountSerializer, SemesterSerializer, SubjectSerializer, TheoryInternalMarkSerializer
+from store.serializer import LabInternalMarkSerializer, PostLabInternalMarkSerializer, PostTheoryInternalMarkSerializer, RegisterStudentSerializer, RegisterTeacherSerializer, SemesterCountSerializer, SemesterSerializer, SubjectSerializer, TheoryInternalMarkSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
@@ -98,7 +98,7 @@ class StudentRegistrationView(ModelViewSet):
 class TheoryInternalMarkViews(ModelViewSet):
     permission_classes = [IsAuthenticated]
     # queryset = TheoryInternalMark.objects.all()
-    serializer_class = TheoryInternalMarkSerializer
+    serializer_class = PostTheoryInternalMarkSerializer
 
     def get_queryset(self):
             queryset = TheoryInternalMark.objects.all()
@@ -114,7 +114,7 @@ class TheoryInternalMarkViews(ModelViewSet):
 class LabInternalMarkViews(ModelViewSet):
     permission_classes = [IsAuthenticated]
     # queryset = LabInternalMark.objects.all()
-    serializer_class = LabInternalMarkSerializer
+    serializer_class = PostLabInternalMarkSerializer
 
     def get_queryset(self):
         queryset = LabInternalMark.objects.all()
