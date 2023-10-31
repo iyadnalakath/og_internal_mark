@@ -274,14 +274,14 @@ class RegisterStudentSerializer(serializers.ModelSerializer):
         return Student.objects.count()
 
 class TheoryInternalMarkSerializer(serializers.ModelSerializer):
-    student_name = RegisterStudentSerializer(source="student",read_only=True)
-    subject_name = serializers.CharField(source="subject.name", read_only=True)
-    average_internal_mark = serializers.SerializerMethodField()
-    average_assignment_mark = serializers.SerializerMethodField()
+    student_name = serializers.CharField(source="student.name",read_only=True)
+    # subject_name = serializers.CharField(source="subject.name", read_only=True)
+    # average_internal_mark = serializers.SerializerMethodField()
+    # average_assignment_mark = serializers.SerializerMethodField()
 
     subject = SubjectSerializer()
     
-    attendance_percentage_mark = serializers.SerializerMethodField()
+    # attendance_percentage_mark = serializers.SerializerMethodField()
     total_internal_mark = serializers.SerializerMethodField()
 
     class Meta:
@@ -291,20 +291,20 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
             "student",
             "student_name",
             "subject",
-            "subject_name",
+            # "subject_name",
             "semester",
-            "se1",
-            "se2",
-            "se3",
-            "average_internal_mark", 
+            # "se1",
+            # "se2",
+            # "se3",
+            # "average_internal_mark", 
 
-            "assignment1",
-            "assignment2",
-            "assignment3",
-            "average_assignment_mark",
+            # "assignment1",
+            # "assignment2",
+            # "assignment3",
+            # "average_assignment_mark",
 
-            "attendance_percentage",
-            "attendance_percentage_mark",
+            # "attendance_percentage",
+            # "attendance_percentage_mark",
             "total_internal_mark"
         ]
 
@@ -356,9 +356,9 @@ class TheoryInternalMarkSerializer(serializers.ModelSerializer):
 
 class LabInternalMarkSerializer(serializers.ModelSerializer):
 
-    student_name = RegisterStudentSerializer(source="student",read_only=True)
-    subject_name = serializers.CharField(source="subject.name", read_only=True)
-    average_test_mark = serializers.SerializerMethodField() 
+    student_name = serializers.CharField(source="student.name",read_only=True)
+    # subject_name = serializers.CharField(source="subject.name", read_only=True)
+    # average_test_mark = serializers.SerializerMethodField() 
     subject = SubjectSerializer()
     total_lab_mark = serializers.SerializerMethodField()
 
@@ -370,18 +370,18 @@ class LabInternalMarkSerializer(serializers.ModelSerializer):
             "student",
             "student_name",
             "subject",
-            "subject_name",
+            # "subject_name",
             "semester",
 
-            "test1",
-            "test2",
-            "average_test_mark",
+            # "test1",
+            # "test2",
+            # "average_test_mark",
 
-            "rough_record_mark",
-            "fair_record_mark",
-            "lab_work_mark",
-            "open_ended_mark",
-            "attendance_mark",
+            # "rough_record_mark",
+            # "fair_record_mark",
+            # "lab_work_mark",
+            # "open_ended_mark",
+            # "attendance_mark",
 
             "total_lab_mark"
 
